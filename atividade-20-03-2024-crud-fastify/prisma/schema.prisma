@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario{
+  id Int @id @default(autoincrement())
+  nome String
+  peso Float
+  senha String
+  email String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tarefas Tarefa[]
+
+  @@map("usuario")
+}
+
+model Categoria{
+  id Int @id @default(autoincrement())
+  nome String
+  cor String
+  tarefa Tarefa?
+  
+  @@map("categoria")
+}
+
+enum Status{
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+}
+
+model Tarefa{
+  id Int @id @default(autoincrement())
+  titulo String
+  descricao String
+  dataCriacao DateTime
+  dataConclusao DateTime?
+  tipo String
+  status Status @default(PENDENTE)
+  userId Int
+  categoriaId Int? @unique
+  usuario Usuario @relation(fields: [userId], references: [id])
+  categoria Categoria? @relation(fields: [categoriaId], references: [id])
+
+  @@map("tarefa")
+}

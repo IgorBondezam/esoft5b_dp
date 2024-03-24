@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "tarefa" ALTER COLUMN "status" SET DEFAULT 'PENDENTE';
