@@ -1,4 +1,4 @@
-import { Usuario, UsuarioCreate } from "../interfaces/usuario.interface";
+import { Usuario, UsuarioCreate, UsuarioLogin } from "../domain/interfaces/usuario.interface";
 import UsuarioRespository from "../repository/usuario.repository";
 
 class UsuarioService{
@@ -23,6 +23,10 @@ class UsuarioService{
 
     async delete(id: number): Promise<void>{
         await this.repository.delete(id); 
+    }
+
+    async fazerLogin(login: UsuarioLogin): Promise<Usuario>{
+        return await this.repository.fazerLogin(login);
     }
 }
 

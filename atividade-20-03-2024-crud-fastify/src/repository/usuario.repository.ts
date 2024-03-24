@@ -1,13 +1,14 @@
-import { Usuario, UsuarioCreate } from "../interfaces/usuario.interface";
+import { Usuario, UsuarioCreate, UsuarioLogin } from "../domain/interfaces/usuario.interface";
 import { prisma } from "../../resources/db/prisma-client";
 
 class UsuarioRespository{
+
     async findAll(): Promise<Usuario[]>{
         return await prisma.usuario.findMany();
     }
 
     async findById(id: number): Promise<Usuario>{
-        return await prisma.usuario.findUnique({
+        return await prisma.usuario.findUniqueOrThrow({
             where: {
                 id: id,
             },
@@ -37,7 +38,6 @@ class UsuarioRespository{
         await prisma.usuario.update({
             where:{id: id},
            data: {
-                id,
                 nome: usuario.nome,
                 senha: usuario.senha,
                 peso: usuario.peso,
@@ -51,6 +51,20 @@ class UsuarioRespository{
             where:{id: id}
         });
     }
+
+    async fazerLogin(login: UsuarioLogin): Promise<Usuario> {
+        return await prisma.usuario.findUniqueOrThrow({
+            where: {
+                email: login.email,
+                senha: login.senha
+            },
+            select:{
+                id: true,
+                nome: true,
+                peso: true,
+                email: true,
+            }
+        });    }
 }
 
 export default new UsuarioRespository();

@@ -3,3 +3,8 @@ export interface Categoria{
     nome: string,
     cor: string,
 }
+
+export interface CategoriaCreate{
+    nome: string,
+    cor: string,
+}

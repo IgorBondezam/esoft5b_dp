@@ -6,9 +6,14 @@ export interface Usuario{
 }
 
 export interface UsuarioCreate{
-    id: number,
+    id?: number,
     nome: string,
     senha: string,
     peso: number,
     email: string
+}
+
+export interface UsuarioLogin{
+    email: string,
+    senha: string
 }
