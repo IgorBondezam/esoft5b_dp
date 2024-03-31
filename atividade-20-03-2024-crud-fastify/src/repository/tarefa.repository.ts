@@ -4,7 +4,19 @@ import { prisma } from "../../resources/db/prisma-client";
 class UsuarioRespository{
 
     async findAll(): Promise<Tarefa[]>{
-        const tarefas: Tarefa[] =  await prisma.tarefa.findMany();
+        const tarefas: Tarefa[] =  await prisma.tarefa.findMany({
+            select: {
+                id: true,
+                titulo: true,
+                descricao: true,
+                dataCriacao: true,
+                dataConclusao: true,
+                tipo: true,
+                status: true,
+                usuarioId: true,
+                categoriaId: true,
+            }
+        });
         if(tarefas.length == 0){
             throw new Error();
         }
@@ -23,6 +35,8 @@ class UsuarioRespository{
                 dataConclusao: true,
                 tipo: true,
                 status: true,
+                usuario: true,
+                categoria: true,
                 usuarioId: true,
                 categoriaId: true,
             }
@@ -36,8 +50,8 @@ class UsuarioRespository{
                 id,
                 titulo,
                 descricao,
-                dataCriacao: new Date(dataCriacao ?? Date.now()),
-                dataConclusao: new Date(dataConclusao ?? null),
+                dataCriacao,
+                dataConclusao: dataConclusao ?? null,
                 tipo, 
                 status,
                 usuarioId,
@@ -53,8 +67,8 @@ class UsuarioRespository{
                 id: tarefa.id,
                 titulo: tarefa.titulo,
                 descricao: tarefa.descricao,
-                dataCriacao: new Date(tarefa.dataCriacao ?? Date.now()),
-                dataConclusao: new Date(tarefa.dataConclusao),
+                dataCriacao: tarefa.dataCriacao,
+                dataConclusao: tarefa.dataConclusao,
                 tipo: tarefa.tipo,
                 status: tarefa.status,
                 usuarioId: tarefa.usuarioId,

@@ -1,6 +1,7 @@
 import { Tarefa } from '../domain/interfaces/tarefa.interface';
 import { FastifyInstance } from "fastify";
 import TarefaService from "../service/tarefa.service";
+import { Status } from '../domain/enums/status.enum';
 
 
 export const tarefaRoutes = async (fastify: FastifyInstance) =>{
@@ -52,6 +53,103 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao buscar tarefa para o id indicado!'})
+        }
+    });
+
+
+    fastify.get<{Params: {categoriaId: number}}>('/categoria/:categoriaId', async (request, reply) => {
+        try {
+            const tarefasByCategoria: Promise<Tarefa[]> = service.findByCategoria(Number(request.params.categoriaId));
+            reply.status(200).send( await tarefasByCategoria);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar tarefas por categoria!'})
+        }
+    });
+
+    fastify.get('/concluidas', async (request, reply) => {
+        try {
+            const tarefasByStatus: Promise<Tarefa[]> = service.findByStatus(Status.CONCLUIDO);
+            reply.status(200).send( await tarefasByStatus);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar tarefas concluídas!'})
+        }
+    });
+
+    fastify.get('/pendentes', async (request, reply) => {
+        try {
+            const tarefasByStatus: Promise<Tarefa[]> = service.findByStatus(Status.PENDENTE);
+            reply.status(200).send( await tarefasByStatus);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar tarefas pendentes!'})
+        }
+    });
+
+    fastify.get<{Params: {dataInicio: Date, dataConclusao: Date}}>('/vencer/:dataInicio/:dataConclusao', async (request, reply) => {
+        try {
+            const tarefasVaoVencer: Promise<Tarefa[]> = service.findVencerEm(request.params.dataInicio, request.params.dataConclusao);
+            reply.status(200).send( await tarefasVaoVencer);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar tarefas que irão vencer em!'})
+        }
+    });
+
+    fastify.get<{Params: {usuarioId: number}}>('/count/:usuarioId', async (request, reply) => {
+        try {
+            const quantidadeTarefasByUsuario: Promise<number> = 
+                service.findCountByUsuario(Number(request.params.usuarioId));
+            reply.status(200).send( await quantidadeTarefasByUsuario);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a quantidade de tarefas!'})
+        }
+    });
+
+    fastify.get<{Params: {usuarioId: number}}>('/recente/:usuarioId', async (request, reply) => {
+        try {
+            const tarefaMaisRecenteByUsuario: Promise<Tarefa> = 
+                service.findTarefaMaisRecente(Number(request.params.usuarioId));
+            reply.status(200).send( await tarefaMaisRecenteByUsuario);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a tarefa mais recente!'})
+        }
+    });
+
+    fastify.get<{Params: {usuarioId: number}}>('/antiga/:usuarioId', async (request, reply) => {
+        try {
+            const tarefaMaisAntigaByUsuario: Promise<Tarefa> = 
+                service.findTarefaMaisAntiga(Number(request.params.usuarioId));
+            reply.status(200).send( await tarefaMaisAntigaByUsuario);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a tarefa mais recente!'})
+        }
+    });
+
+    fastify.get('/agrupar/categoria', async (request, reply) => {
+        try {
+            const tarefasAgrupadasPorCategoria: Promise<Tarefa[]> = 
+                service.findTarefaAgruparPorCategoria();
+            reply.status(200).send( await tarefasAgrupadasPorCategoria);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a tarefa mais recente!'})
+        }
+    });
+
+    fastify.get('/maior/descricao', async (request, reply) => {
+        try {
+            const tarefaMaiorDescricao: Promise<Tarefa> = 
+                service.findMaiorDescricao();
+            reply.status(200).send( await tarefaMaiorDescricao);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a tarefa com maior descrição!'})
+        }
+    });
+
+    fastify.get('/media/conclusao/tarefa', async (request, reply) => {
+        try {
+            const mediaConclusaoTarefa: Promise<number> = 
+                service.mediaConclusaoTarefa();
+            reply.status(200).send( await mediaConclusaoTarefa);
+        } catch (error) {
+            reply.status(400).send({message: 'Erro ao buscar a média de conclusão de tarefas!'})
         }
     });
 }
