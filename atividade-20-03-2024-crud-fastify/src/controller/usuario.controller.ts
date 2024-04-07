@@ -1,13 +1,14 @@
 import { UsuarioCreate, UsuarioLogin } from '../domain/interfaces/usuario.interface';
 import { FastifyInstance } from "fastify";
 import UsuarioService from "../service/usuario.service";
+import { rotaAutenticada } from './autenticacao.controller.config';
 
 
 export const usuarioRoutes = async (fastify: FastifyInstance) =>{
     
     const service = UsuarioService;
 
-    fastify.get<{Params: {id: number}}>('/', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/', rotaAutenticada, async (request, reply)=>{
         try {
             reply.send(await service.findAll());
         } catch(e){
@@ -16,7 +17,7 @@ export const usuarioRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try {
             reply.status(200).send(await service.findById(Number(request.params.id)));
         } catch(e){
@@ -35,7 +36,7 @@ export const usuarioRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.put<{Body: UsuarioCreate, Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.put<{Body: UsuarioCreate, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.update(Number(request.params.id), request.body);
             reply.status(200).send({message: 'Usuário atualizado com sucesso!'});
@@ -45,7 +46,7 @@ export const usuarioRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Usuário deletado com sucesso!'});

@@ -1,13 +1,14 @@
 import { CategoriaCreate } from '../domain/interfaces/categoria.interface';
 import { FastifyInstance } from "fastify";
 import CategoriaService from "../service/categoria.service";
+import { rotaAutenticada } from './autenticacao.controller.config';
 
 
 export const categoriaRoutes = async (fastify: FastifyInstance) =>{
     
     const service = CategoriaService;
 
-    fastify.get<{Params: {id: number}}>('/', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/', rotaAutenticada, async (request, reply)=>{
         try {
             reply.send(await service.findAll());
         } catch(e){
@@ -16,7 +17,7 @@ export const categoriaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try {
             reply.status(200).send(await service.findById(Number(request.params.id)));
         } catch(e){
@@ -25,7 +26,7 @@ export const categoriaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.post<{Body: CategoriaCreate}>('/', async (request, reply)=>{
+    fastify.post<{Body: CategoriaCreate}>('/', rotaAutenticada, async (request, reply)=>{
         try{
             await service.create(request.body);
             reply.status(201).send({message: 'Categoria cadastrada com sucesso!'});
@@ -35,7 +36,7 @@ export const categoriaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.put<{Body: CategoriaCreate, Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.put<{Body: CategoriaCreate, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.update(Number(request.params.id), request.body);
             reply.status(200).send({message: 'Categoria atualizada com sucesso!'});
@@ -45,7 +46,7 @@ export const categoriaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Categoria deletada com sucesso!'});

@@ -2,13 +2,13 @@ import { Tarefa } from '../domain/interfaces/tarefa.interface';
 import { FastifyInstance } from "fastify";
 import TarefaService from "../service/tarefa.service";
 import { Status } from '../domain/enums/status.enum';
-
+import { rotaAutenticada } from './autenticacao.controller.config';
 
 export const tarefaRoutes = async (fastify: FastifyInstance) =>{
     
     const service = TarefaService;
 
-    fastify.get<{Params: {id: number}}>('/', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/', rotaAutenticada, async (request, reply)=>{
         try {
             reply.send(await service.findAll());
         } catch(e){
@@ -17,7 +17,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.get<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try {
             reply.status(200).send(await service.findById(Number(request.params.id)));
         } catch(e){
@@ -26,7 +26,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.post<{Body: Tarefa}>('/', async (request, reply)=>{
+    fastify.post<{Body: Tarefa}>('/', rotaAutenticada, async (request, reply)=>{
         try{
             await service.create(request.body);
             reply.status(201).send({message: 'Tarefa cadastrada com sucesso!'});
@@ -36,7 +36,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.put<{Body: Tarefa, Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.put<{Body: Tarefa, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.update(Number(request.params.id), request.body);
             reply.status(200).send({message: 'Tarefa atualizada com sucesso!'});
@@ -46,7 +46,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Tarefa deletada com sucesso!'});
@@ -57,7 +57,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
     });
 
 
-    fastify.get<{Params: {categoriaId: number}}>('/categoria/:categoriaId', async (request, reply) => {
+    fastify.get<{Params: {categoriaId: number}}>('/categoria/:categoriaId', rotaAutenticada, async (request, reply) => {
         try {
             const tarefasByCategoria: Promise<Tarefa[]> = service.findByCategoria(Number(request.params.categoriaId));
             reply.status(200).send( await tarefasByCategoria);
@@ -66,7 +66,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get('/concluidas', async (request, reply) => {
+    fastify.get('/concluidas', rotaAutenticada, async (request, reply) => {
         try {
             const tarefasByStatus: Promise<Tarefa[]> = service.findByStatus(Status.CONCLUIDO);
             reply.status(200).send( await tarefasByStatus);
@@ -75,7 +75,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get('/pendentes', async (request, reply) => {
+    fastify.get('/pendentes', rotaAutenticada, async (request, reply) => {
         try {
             const tarefasByStatus: Promise<Tarefa[]> = service.findByStatus(Status.PENDENTE);
             reply.status(200).send( await tarefasByStatus);
@@ -84,7 +84,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {dataInicio: Date, dataConclusao: Date}}>('/vencer/:dataInicio/:dataConclusao', async (request, reply) => {
+    fastify.get<{Params: {dataInicio: Date, dataConclusao: Date}}>('/vencer/:dataInicio/:dataConclusao', rotaAutenticada, async (request, reply) => {
         try {
             const tarefasVaoVencer: Promise<Tarefa[]> = service.findVencerEm(request.params.dataInicio, request.params.dataConclusao);
             reply.status(200).send( await tarefasVaoVencer);
@@ -93,7 +93,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {usuarioId: number}}>('/count/:usuarioId', async (request, reply) => {
+    fastify.get<{Params: {usuarioId: number}}>('/count/:usuarioId', rotaAutenticada, async (request, reply) => {
         try {
             const quantidadeTarefasByUsuario: Promise<number> = 
                 service.findCountByUsuario(Number(request.params.usuarioId));
@@ -103,7 +103,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {usuarioId: number}}>('/recente/:usuarioId', async (request, reply) => {
+    fastify.get<{Params: {usuarioId: number}}>('/recente/:usuarioId', rotaAutenticada, async (request, reply) => {
         try {
             const tarefaMaisRecenteByUsuario: Promise<Tarefa> = 
                 service.findTarefaMaisRecente(Number(request.params.usuarioId));
@@ -113,7 +113,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get<{Params: {usuarioId: number}}>('/antiga/:usuarioId', async (request, reply) => {
+    fastify.get<{Params: {usuarioId: number}}>('/antiga/:usuarioId', rotaAutenticada, async (request, reply) => {
         try {
             const tarefaMaisAntigaByUsuario: Promise<Tarefa> = 
                 service.findTarefaMaisAntiga(Number(request.params.usuarioId));
@@ -123,7 +123,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get('/agrupar/categoria', async (request, reply) => {
+    fastify.get('/agrupar/categoria', rotaAutenticada, async (request, reply) => {
         try {
             const tarefasAgrupadasPorCategoria: Promise<Tarefa[]> = 
                 service.findTarefaAgruparPorCategoria();
@@ -133,7 +133,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get('/maior/descricao', async (request, reply) => {
+    fastify.get('/maior/descricao', rotaAutenticada, async (request, reply) => {
         try {
             const tarefaMaiorDescricao: Promise<Tarefa> = 
                 service.findMaiorDescricao();
@@ -143,7 +143,7 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.get('/media/conclusao/tarefa', async (request, reply) => {
+    fastify.get('/media/conclusao/tarefa', rotaAutenticada, async (request, reply) => {
         try {
             const mediaConclusaoTarefa: Promise<number> = 
                 service.mediaConclusaoTarefa();

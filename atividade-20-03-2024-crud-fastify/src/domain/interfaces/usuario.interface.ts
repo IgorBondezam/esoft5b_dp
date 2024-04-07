@@ -2,7 +2,8 @@ export interface Usuario{
     id: number,
     nome: string,
     peso: number,
-    email: string
+    email: string,
+    token?: string
 }
 
 export interface UsuarioCreate{
@@ -10,7 +11,7 @@ export interface UsuarioCreate{
     nome: string,
     senha: string,
     peso: number,
-    email: string
+    email: string,
 }
 
 export interface UsuarioLogin{

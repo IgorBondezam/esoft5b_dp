@@ -21,9 +21,9 @@ class UsuarioRespository{
         });
     }
 
-    async create(usuario: UsuarioCreate): Promise<void>{
+    async create(usuario: UsuarioCreate): Promise<Usuario>{
         const { id, nome, senha, peso, email } = usuario
-        await prisma.usuario.create({
+        return await prisma.usuario.create({
            data: {
                 id,
                 nome,
@@ -64,7 +64,16 @@ class UsuarioRespository{
                 peso: true,
                 email: true,
             }
-        });    }
+        });    
+    }
+
+    async findByEmail(email: string){
+        return await prisma.usuario.findFirst({
+            where: {
+                email: email,
+            }
+        })
+    }
 }
 
 export default new UsuarioRespository();

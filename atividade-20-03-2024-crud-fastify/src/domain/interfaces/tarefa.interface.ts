@@ -8,7 +8,7 @@ export interface Tarefa{
     dataConclusao?: Date,
     tipo: string,
     status: Status,
-    usuario: Usuario,
+    usuario?: Usuario,
     categoria?: Categoria,
     usuarioId: number,
     categoriaId?: number,

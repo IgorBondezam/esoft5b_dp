@@ -1,5 +1,6 @@
 import { Usuario, UsuarioCreate, UsuarioLogin } from "../domain/interfaces/usuario.interface";
 import UsuarioRespository from "../repository/usuario.repository";
+import tokenService from "./token.service";
 
 class UsuarioService{
     private repository = UsuarioRespository;
@@ -14,7 +15,11 @@ class UsuarioService{
     }
 
     async create(usuario: UsuarioCreate): Promise<void>{
-        await this.repository.create(usuario); 
+        const emailJaUtilizado = this.repository.findByEmail(usuario.email);
+        if(emailJaUtilizado){
+            throw new Error('Email já utilizado!');
+        }
+        await this.repository.create(usuario);  
     }
 
     async update(id: number, usuario: UsuarioCreate): Promise<void>{
@@ -26,7 +31,12 @@ class UsuarioService{
     }
 
     async fazerLogin(login: UsuarioLogin): Promise<Usuario>{
-        return await this.repository.fazerLogin(login);
+        const usuario = await this.repository.fazerLogin(login);
+        const token = tokenService.createToken(usuario);
+        usuario.token = token;
+        console.log(token);
+
+        return usuario;
     }
 }
 
