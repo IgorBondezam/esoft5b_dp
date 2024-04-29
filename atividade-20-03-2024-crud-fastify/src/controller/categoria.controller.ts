@@ -26,27 +26,29 @@ export const categoriaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.post<{Body: CategoriaCreate}>('/', rotaAutenticada, async (request, reply)=>{
+    fastify.post<{Body: CategoriaCreate}>('/',  async (request, reply)=>{
         try{
-            await service.create(request.body);
-            reply.status(201).send({message: 'Categoria cadastrada com sucesso!'});
+            const created = await service.create(request.body);
+            reply.status(201).send(created);
+            // reply.status(201).send({message: 'Categoria cadastrada com sucesso!'});
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao criar novo categoria!'})
         }
     });
 
-    fastify.put<{Body: CategoriaCreate, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.put<{Body: CategoriaCreate, Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
-            await service.update(Number(request.params.id), request.body);
-            reply.status(200).send({message: 'Categoria atualizada com sucesso!'});
+            const updated = await service.update(Number(request.params.id), request.body);
+            reply.status(200).send(updated);
+            // reply.status(200).send({message: 'Categoria atualizada com sucesso!'});
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao buscar categoria para o id indicado!'})
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Categoria deletada com sucesso!'});

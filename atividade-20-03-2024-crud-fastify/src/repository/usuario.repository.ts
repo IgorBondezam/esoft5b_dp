@@ -34,8 +34,8 @@ class UsuarioRespository{
         });
     }
 
-    async update(id: number, usuario: UsuarioCreate): Promise<void>{
-        await prisma.usuario.update({
+    async update(id: number, usuario: UsuarioCreate): Promise<Usuario>{
+        return await prisma.usuario.update({
             where:{id: id},
            data: {
                 nome: usuario.nome,

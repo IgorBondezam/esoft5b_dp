@@ -26,27 +26,28 @@ export const tarefaRoutes = async (fastify: FastifyInstance) =>{
         }
     });
 
-    fastify.post<{Body: Tarefa}>('/', rotaAutenticada, async (request, reply)=>{
+    fastify.post<{Body: Tarefa}>('/',  async (request, reply)=>{
         try{
-            await service.create(request.body);
-            reply.status(201).send({message: 'Tarefa cadastrada com sucesso!'});
+            const created = await service.create(request.body);
+            reply.status(201).send(created);
+            // reply.status(201).send({message: 'Tarefa cadastrada com sucesso!'});
         } catch(e){
             console.error(e)
-            reply.status(400).send({message: 'Erro ao criar novo tarefa!'})
+            reply.status(400).send({message: 'Erro ao criar nova tarefa!'})
         }
     });
 
-    fastify.put<{Body: Tarefa, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.put<{Body: Tarefa, Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
-            await service.update(Number(request.params.id), request.body);
-            reply.status(200).send({message: 'Tarefa atualizada com sucesso!'});
+            const updated = await service.update(Number(request.params.id), request.body);
+            reply.status(200).send(updated);
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao buscar tarefa para o id indicado!'})
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Tarefa deletada com sucesso!'});

@@ -24,9 +24,9 @@ class CategoriaRepository{
         });
     }
 
-    async create(categoria: CategoriaCreate): Promise<void>{
+    async create(categoria: CategoriaCreate): Promise<Categoria>{
         const { nome, cor } = categoria
-        await prisma.categoria.create({
+        return await prisma.categoria.create({
            data: {
                 nome,
                 cor,
@@ -34,8 +34,8 @@ class CategoriaRepository{
         });
     }
 
-    async update(id: number, categoria: CategoriaCreate): Promise<void>{
-        await prisma.categoria.update({
+    async update(id: number, categoria: CategoriaCreate): Promise<Categoria>{
+        return await prisma.categoria.update({
             where:{id: id},
            data: {
                 nome: categoria.nome,

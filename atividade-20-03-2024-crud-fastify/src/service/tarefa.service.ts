@@ -2,7 +2,7 @@ import { Status } from "../domain/enums/status.enum";
 import { Tarefa } from "../domain/interfaces/tarefa.interface";
 import TarefaRepository from "../repository/tarefa.repository";
 
-class UsuarioService{
+class TarefaService{
     private repository = TarefaRepository;
     constructor(){}
 
@@ -14,12 +14,12 @@ class UsuarioService{
         return await this.repository.findById(id);
     }
 
-    async create(tarefa: Tarefa): Promise<void>{
-        await this.repository.create(tarefa); 
+    async create(tarefa: Tarefa): Promise<Tarefa>{
+        return await this.repository.create(tarefa);
     }
 
-    async update(id: number, tarefa: Tarefa): Promise<void>{
-        await this.repository.update(id, tarefa); 
+    async update(id: number, tarefa: Tarefa): Promise<Tarefa>{
+        return await this.repository.update(id, tarefa);
     }
 
     async delete(id: number): Promise<void>{
@@ -86,4 +86,4 @@ class UsuarioService{
     }
 }
 
-export default new UsuarioService();
+export default new TarefaService();

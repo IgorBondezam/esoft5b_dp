@@ -43,9 +43,9 @@ class UsuarioRespository{
         });
     }
 
-    async create(usuario: Tarefa): Promise<void>{
-        const { id, titulo, descricao, dataCriacao, dataConclusao, tipo, status, usuarioId, categoriaId } = usuario
-        await prisma.tarefa.create({
+    async create(tarefa: Tarefa): Promise<Tarefa>{
+        const { id, titulo, descricao, dataCriacao, dataConclusao, tipo, status, usuarioId, categoriaId } = tarefa
+        return await prisma.tarefa.create({
            data: {
                 id,
                 titulo,
@@ -60,8 +60,8 @@ class UsuarioRespository{
         });
     }
 
-    async update(id: number, tarefa: Tarefa): Promise<void>{
-        await prisma.tarefa.update({
+    async update(id: number, tarefa: Tarefa): Promise<Tarefa>{
+        return await prisma.tarefa.update({
             where:{id: id},
            data: {
                 id: tarefa.id,

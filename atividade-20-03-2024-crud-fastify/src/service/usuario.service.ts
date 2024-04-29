@@ -14,16 +14,16 @@ class UsuarioService{
         return await this.repository.findById(id);
     }
 
-    async create(usuario: UsuarioCreate): Promise<void>{
-        const emailJaUtilizado = this.repository.findByEmail(usuario.email);
-        if(emailJaUtilizado){
+    async create(usuario: UsuarioCreate): Promise<Usuario>{
+        const emailJaUtilizado = await this.repository.findByEmail(usuario.email);
+        if(!!emailJaUtilizado){
             throw new Error('Email já utilizado!');
         }
-        await this.repository.create(usuario);  
+        return await this.repository.create(usuario);
     }
 
-    async update(id: number, usuario: UsuarioCreate): Promise<void>{
-        await this.repository.update(id, usuario); 
+    async update(id: number, usuario: UsuarioCreate): Promise<Usuario>{
+        return await this.repository.update(id, usuario);
     }
 
     async delete(id: number): Promise<void>{
@@ -34,7 +34,6 @@ class UsuarioService{
         const usuario = await this.repository.fazerLogin(login);
         const token = tokenService.createToken(usuario);
         usuario.token = token;
-        console.log(token);
 
         return usuario;
     }

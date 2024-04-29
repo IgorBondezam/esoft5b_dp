@@ -28,25 +28,27 @@ export const usuarioRoutes = async (fastify: FastifyInstance) =>{
 
     fastify.post<{Body: UsuarioCreate}>('/', async (request, reply)=>{
         try{
-            await service.create(request.body);
-            reply.status(201).send({message: 'Usuário cadastrado com sucesso!'});
+            const created = await service.create(request.body);
+            reply.status(201).send(created);
+            // reply.status(201).send({message: 'Usuário cadastrado com sucesso!'});
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao criar novo usuário!'})
         }
     });
 
-    fastify.put<{Body: UsuarioCreate, Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.put<{Body: UsuarioCreate, Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
-            await service.update(Number(request.params.id), request.body);
-            reply.status(200).send({message: 'Usuário atualizado com sucesso!'});
+            const updated = await service.update(Number(request.params.id), request.body);
+            reply.status(200).send(updated);
+            // reply.status(200).send({message: 'Usuário atualizado com sucesso!'});
         } catch(e){
             console.error(e)
             reply.status(400).send({message: 'Erro ao buscar usuário para o id indicado!'})
         }
     });
 
-    fastify.delete<{Params: {id: number}}>('/:id', rotaAutenticada, async (request, reply)=>{
+    fastify.delete<{Params: {id: number}}>('/:id',  async (request, reply)=>{
         try{
             await service.delete(Number(request.params.id));
             reply.status(204).send({message: 'Usuário deletado com sucesso!'});

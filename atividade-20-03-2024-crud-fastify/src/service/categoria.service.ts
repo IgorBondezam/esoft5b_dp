@@ -1,7 +1,7 @@
 import { Categoria, CategoriaCreate } from "../domain/interfaces/categoria.interface";
 import CategoriaRepository from "../repository/categoria.repository";
 
-class UsuarioService{
+class CategoriaoService{
     private repository = CategoriaRepository;
     constructor(){}
 
@@ -13,12 +13,12 @@ class UsuarioService{
         return await this.repository.findById(id);
     }
 
-    async create(categoria: CategoriaCreate): Promise<void>{
-        await this.repository.create(categoria); 
+    async create(categoria: CategoriaCreate): Promise<Categoria>{
+        return await this.repository.create(categoria);
     }
 
-    async update(id: number, categoria: CategoriaCreate): Promise<void>{
-        await this.repository.update(id, categoria); 
+    async update(id: number, categoria: CategoriaCreate): Promise<Categoria>{
+        return await this.repository.update(id, categoria);
     }
 
     async delete(id: number): Promise<void>{
@@ -26,4 +26,4 @@ class UsuarioService{
     }
 }
 
-export default new UsuarioService();
+export default new CategoriaoService();
