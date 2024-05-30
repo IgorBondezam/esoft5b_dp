@@ -10,7 +10,6 @@ export class ProductController {
   @Post()
   create(@Body() createProductDto: ProductDto) {
     try{
-      throw new Error();
       return this.productService.create(createProductDto);
     } catch (error) {
       throw new DeuErro(HttpStatus.INTERNAL_SERVER_ERROR, 'Deu Erro JUREGUI', 'Deu Erro')}
